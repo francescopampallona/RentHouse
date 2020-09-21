@@ -13,17 +13,13 @@ import com.renthouse.model.User;
 import com.renthouse.service.UserService;
 
 @Controller 
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
 	
-	@GetMapping	
-	public String getAll(HttpServletRequest request) {
-		setAll(request);
-		return "users";
-	}
+	
 	
 	@PostMapping("/register")
 	public String register(HttpServletRequest request,
@@ -41,8 +37,28 @@ public class UserController {
 		
 	}
 	
-	private void setAll(HttpServletRequest request) {
-		request.getSession().setAttribute("list", userService.findAll());
+	@GetMapping("/home/")
+	public String getByUsername(HttpServletRequest request) {
+		User user = this.userService.getCurrentUser();
+		request.setAttribute("user", user);
+		return "home";
 	}
+	
+	@PostMapping("/update/")
+	public String updateUserData(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("telephone") String telephone) {
+		User user = this.userService.getCurrentUser();
+		user.setEmail(email);
+		user.setTelephone(telephone);
+		this.userService.update(user);
+		request.setAttribute("user", user);
+		return "home";
+	}
+	
+	
+	
+	
+	
+	
+
 	
 }
