@@ -8,17 +8,7 @@
 
 <link href="/css/stile.css" rel="stylesheet">
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<!-- Popper JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<jsp:include page="imports.jsp"></jsp:include>
 
 <title>HOME</title>
 </head>
@@ -26,7 +16,7 @@
 <%
    User user = (User)request.getAttribute("user");
 %>
-	
+	<jsp:include page="header.jsp"></jsp:include>
 	<h1>Welcome <%=user.getUsername()%></h1>
 	
 	<h2>Personal data</h2>
@@ -69,6 +59,8 @@
 	  </div>
 	  
 	</div>
+	
+	
 	
 		 
 </body>

@@ -6,20 +6,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="houses", 
        uniqueConstraints= {
-    		   @UniqueConstraint(columnNames={"nation", "city", "address", "number"})})
+    		   @UniqueConstraint(columnNames={"nation", "city", "address", "civicNumber"})})
 public class House {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	@Column
-	private String description;
 	
 	@Column
 	private String nation;
@@ -40,27 +38,49 @@ public class House {
 	private float lowSeasonPrice;
 	
 	@Column
+	private String lowSeasonStartMonth;
+	
+	@Column
 	private float mediumSeasonPrice;
+	
+	@Column
+	private String mediumSeasonStartMonth;
 	
 	@Column
 	private float highSeasonPrice;
 	
+	@Column
+	private String highSeasonStartMonth;
+	
+	@OneToOne
+	private RentAnnouncement announcement;
+	
+
+
 	@ManyToOne
 	private User owner;
 	
-	//Constructor
-	public House(String description, String nation, String city, String address, int civicNumber, int maxGuests, float lowSeasonPrice, float mediumSeasonPrice, float highSeasonPrice, User owner) {
-		this.description = description;
+	
+	
+	//Constructors
+	public House() {}
+	
+	public House(String nation, String city, String address, int civicNumber, int maxGuests, float lowSeasonPrice, String lowSeasonStartMonth, float mediumSeasonPrice,String mediumSeasonStartMonth, float highSeasonPrice, String highSeasonStartMonth, User owner) {
 		this.nation = nation;
 		this.city = city;
 		this.address = address;
 		this.civicNumber = civicNumber;
 		this.maxGuests = maxGuests;
 		this.lowSeasonPrice = lowSeasonPrice;
+		this.lowSeasonStartMonth = lowSeasonStartMonth;
 		this.mediumSeasonPrice = mediumSeasonPrice;
+		this.mediumSeasonStartMonth = mediumSeasonStartMonth;
 		this.highSeasonPrice = highSeasonPrice;
+		this.highSeasonStartMonth = highSeasonStartMonth;
 		this.owner = owner;
 	}
+	
+	
     
 	
 	//Getter and setter
@@ -70,14 +90,6 @@ public class House {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getNation() {
@@ -150,6 +162,38 @@ public class House {
 
 	public void setOwner(User owner) {
 		this.owner = owner;
+	}
+	
+	public String getLowSeasonStartMonth() {
+		return lowSeasonStartMonth;
+	}
+
+	public void setLowSeasonStartMonth(String lowSeasonStartMonth) {
+		this.lowSeasonStartMonth = lowSeasonStartMonth;
+	}
+
+	public String getMediumSeasonStartMonth() {
+		return mediumSeasonStartMonth;
+	}
+
+	public void setMediumSeasonStartMonth(String mediumSeasonStartMonth) {
+		this.mediumSeasonStartMonth = mediumSeasonStartMonth;
+	}
+
+	public String getHighSeasonStartMonth() {
+		return highSeasonStartMonth;
+	}
+
+	public void setHighSeasonStartMonth(String highSeasonStartMonth) {
+		this.highSeasonStartMonth = highSeasonStartMonth;
+	}
+
+	public RentAnnouncement getAnnouncement() {
+		return announcement;
+	}
+
+	public void setAnnouncement(RentAnnouncement announcement) {
+		this.announcement = announcement;
 	}
 
 	
