@@ -45,8 +45,12 @@ public class HouseController {
 			@RequestParam("highSeasonPrice") float highSeasonPrice,
 			@RequestParam("highSeasonStartMonth") String highSeasonStartMonth) {
 		
+		if(dataIsValid(request, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth)) {
+		request.setAttribute("successMessage", "House created successfully");
 		House house = new House(nation, city, address, civicNumber, maxGuests, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth, this.userService.getCurrentUser());
 		houseService.insert(house);
+		}
+		
 		
 		this.setHouses(request);
 		return "houseManagement";
@@ -67,9 +71,13 @@ public class HouseController {
 			@RequestParam("highSeasonPrice") float highSeasonPrice,
 			@RequestParam("highSeasonStartMonth") String highSeasonStartMonth) {
 		
+		
+		if(dataIsValid(request, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth)) {
+		request.setAttribute("successMessage", "House updated successfully");
 		House house = new House(nation, city, address, civicNumber, maxGuests, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth,this.userService.getCurrentUser());
 		house.setId(id);
 		houseService.update(house);
+		}
 		
 		this.setHouses(request);
 		return "houseManagement";
@@ -80,6 +88,36 @@ public class HouseController {
 		Iterable<House> houses = houseService.findAll();
 		request.setAttribute("houses", houses);
 		
+	}
+	
+	//Check validity of data inserted by user
+	private boolean dataIsValid(HttpServletRequest request, float lowSeasonPrice, String lowSeasonStartMonth, float mediumSeasonPrice, String mediumSeasonStartMonth, float highSeasonPrice, String highSeasonStartMonth) {
+		if((lowSeasonPrice>mediumSeasonPrice) || (lowSeasonPrice>highSeasonPrice) || (mediumSeasonPrice>highSeasonPrice)) {
+			if(lowSeasonPrice>mediumSeasonPrice) {
+				request.setAttribute("errorMessage", "Low season price should be less than medium season price");
+			}
+			else if(lowSeasonPrice>=highSeasonPrice) {
+				request.setAttribute("errorMessage", "Low season price should be less than high season price");
+			}
+			else {
+				request.setAttribute("errorMessage", "Medium season price should be less than high season price");
+			}
+			return false;
+		}
+		if((lowSeasonStartMonth.equals(mediumSeasonStartMonth)) || (lowSeasonStartMonth.equals(highSeasonStartMonth)) || (mediumSeasonStartMonth.equals(highSeasonStartMonth))) {
+			if(lowSeasonStartMonth.equals(mediumSeasonStartMonth)) {
+				request.setAttribute("errorMessage", "Low season start month should be different from medium season start month");
+			}
+			else if(lowSeasonStartMonth.equals(highSeasonStartMonth)) {
+				request.setAttribute("errorMessage", "Low season start month should be different from high season start month");
+			}
+			else {
+				request.setAttribute("errorMessage", "Medium season start month should be different from high season start month");
+			}
+			return false;
+		}
+		
+		return true;
 	}
 	
 	

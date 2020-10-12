@@ -15,6 +15,12 @@
 <%
 Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses"); 
 %>
+<!-----------------------MESSAGES --------------------------->
+<%if(request.getAttribute("errorMessage")!=null){ %>
+<div class="alert alert-danger" role="alert"><%=request.getAttribute("errorMessage")%></div>
+<%}else if(request.getAttribute("successMessage")!=null){ %>
+<div class="alert alert-success" role="alert"> <%=request.getAttribute("successMessage")%></div>
+<%} %>
 <!---------------------------------------------------------------------------- HOUSE REGISTRATION ---------------------------------------------------------------------------->
 <button class="btn btn-primary" data-toggle="modal" data-target="#newHouse">REGISTER A NEW HOUSE</button>
 
@@ -105,10 +111,10 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
  else{%>
   <td><button class="btn btn-danger">REMOVE ANNOUNCEMENT</button></td>
  <%} %>
- </tr>
+
  
  <!------------------------------------------------------------------------------------------ MODAL FOR DETAILS ------------------------------------------------------------------------------------------>
- 
+ <td>
 <div class="modal" id="detailsModal<%=house.getId()%>">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
@@ -173,9 +179,11 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
 	  </div>
 	  
 	</div>
+</td>
  <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
  <!------------------------------------------------------------------------------------------ MODAL FOR UPDATE ------------------------------------------------------------------------------------------>
  <!-- Modal for update -->
+ <td>
 <div class="modal" id="updateModal<%=house.getId()%>">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
@@ -231,8 +239,10 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
 	  </div>
 	  
 	</div>
+	</td>
 <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
 <%}  %>
+ </tr>
 </table>
 
 </body>
