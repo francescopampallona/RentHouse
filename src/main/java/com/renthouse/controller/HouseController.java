@@ -92,7 +92,7 @@ public class HouseController {
 	
 	//Check validity of data inserted by user
 	private boolean dataIsValid(HttpServletRequest request, float lowSeasonPrice, String lowSeasonStartMonth, float mediumSeasonPrice, String mediumSeasonStartMonth, float highSeasonPrice, String highSeasonStartMonth) {
-		if((lowSeasonPrice>mediumSeasonPrice) || (lowSeasonPrice>highSeasonPrice) || (mediumSeasonPrice>highSeasonPrice)) {
+		if((lowSeasonPrice>=mediumSeasonPrice) || (lowSeasonPrice>=highSeasonPrice) || (mediumSeasonPrice>=highSeasonPrice)) {
 			if(lowSeasonPrice>mediumSeasonPrice) {
 				request.setAttribute("errorMessage", "Low season price should be less than medium season price");
 			}
