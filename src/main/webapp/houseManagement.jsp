@@ -54,21 +54,13 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
 	         
 	         <label for="lowSeasonPrice">Low season daily price</label>
 	         <input class="form-control" type="number" min="0.00" max="1000000.00" step="0.01" name="lowSeasonPrice" placeholder="Low season price">
-	         
-	         <label for="lowSeasonStartMonth">Low season start month</label>
-	         <input class="form-control" type="month" name="lowSeasonStartMonth" placeholder="Low season start month">
-	         
+	        
 	         <label for="mediumSeasonPrice">Medium season daily price</label>
 	         <input class="form-control" type="number" min="0.00" max="1000000.00" step="0.01" name="mediumSeasonPrice" placeholder="Medium season  price">
 	         
-	         <label for="mediumSeasonStartMonth">Medium season start month</label>
-	         <input class="form-control" type="month" name="mediumSeasonStartMonth" placeholder="Medium season start month">
-	         
 	         <label for="highSeasonPrice">High season daily price</label>
 	         <input class="form-control" type="number"   min="0.00" max="1000000.00" step="0.01" name="highSeasonPrice" placeholder="High season price">
-	         
-	         <label for="highSeasonStartMonth">High season start month</label>
-	         <input class="form-control" type="month" name="highSeasonStartMonth" placeholder="High season start month">
+	      
 	         <input type="submit" class="btn btn-primary">
 	      </form>
 	    </div>
@@ -102,16 +94,13 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
  <td><%=house.getMaxGuests()%></td>
  <td><button data-toggle="modal" data-target="#detailsModal<%=house.getId()%>">DETAILS</button></td>
  <td><button data-toggle="modal" data-target="#updateModal<%=house.getId()%>">UPDATE</button></td>
- 
- <!-------------------------------------------- NEW ANNOUNCEMENT-------------------------------------------------------->
- <%if(house.getAnnouncement()==null){%>
- <td><button>NEW ANNOUNCEMENT</button></td>
- <%
- } 
- else{%>
-  <td><button class="btn btn-danger">REMOVE ANNOUNCEMENT</button></td>
- <%} %>
-
+ <% if(house.getAnnouncement()==null){%>
+<td><button class="btn btn-primary" data-toggle="modal" data-target="#newRentAnnouncement<%=house.getId()%>">NEW RENT ANNOUNCEMENT</button></td>
+<%} 
+ else{
+%>
+<td><button class="btn btn-primary" data-toggle="modal" data-target="#manageRentAnnouncement<%=house.getId()%>">MANAGE RENT ANNOUNCEMENT</button></td>
+<%} %>
  
  <!------------------------------------------------------------------------------------------ MODAL FOR DETAILS ------------------------------------------------------------------------------------------>
  <td>
@@ -149,26 +138,17 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
 	         <div class="col-md-6">Low season daily price: </div>
 	         <div class="col-md-6"><%=house.getLowSeasonPrice()%></div>
 	       </div>
-	        <div class="row">
-	         <div class="col-md-6">Low season start month: </div>
-	         <div class="col-md-6"><%=house.getLowSeasonStartMonth()%></div>
-	       </div>
+
 	       <div class="row">
 	         <div class="col-md-6">Medium season daily price: </div>
 	         <div class="col-md-6"><%=house.getMediumSeasonPrice()%></div>
 	       </div>
-	        <div class="row">
-	         <div class="col-md-6">Medium season start month: </div>
-	         <div class="col-md-6"><%=house.getMediumSeasonStartMonth()%></div>
-	       </div>
+	     
 	       <div class="row">
 	         <div class="col-md-6">High season daily price: </div>
 	         <div class="col-md-6"><%=house.getHighSeasonPrice()%></div>
 	       </div>
-	        <div class="row">
-	         <div class="col-md-6">High season start month: </div>
-	         <div class="col-md-6"><%=house.getHighSeasonStartMonth()%></div>
-	       </div>
+	       
 	       
 	    </div>
 	    <!-- Modal footer -->
@@ -214,20 +194,14 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
 	         <label for="lowSeasonPrice">Low season daily price</label>
 	         <input class="form-control" type="number" min="0.00" max="1000000.00" step="0.01" name="lowSeasonPrice" placeholder="Low season price" value="<%=house.getLowSeasonPrice()%>">
 	         
-	         <label for="lowSeasonStartMonth">Low season start month</label>
-	         <input class="form-control" type="month" name="lowSeasonStartMonth" placeholder="Low season start month" value="<%=house.getLowSeasonStartMonth()%>">
 	         
 	         <label for="mediumSeasonPrice">Medium season daily price</label>
 	         <input class="form-control" type="number" min="0.00" max="1000000.00" step="0.01" name="mediumSeasonPrice" placeholder="Medium season  price" value="<%=house.getMediumSeasonPrice()%>">
 	         
-	         <label for="mediumSeasonStartMonth">Medium season start month</label>
-	         <input class="form-control" type="month" name="mediumSeasonStartMonth" placeholder="Medium season start month" value="<%=house.getMediumSeasonStartMonth()%>">
-	         
+	        
 	         <label for="highSeasonPrice">High season daily price</label>
 	         <input class="form-control" type="number"   min="0.00" max="1000000.00" step="0.01" name="highSeasonPrice" placeholder="High season price" value="<%=house.getHighSeasonPrice()%>">
 	         
-	         <label for="highSeasonStartMonth">High season start month</label>
-	         <input class="form-control" type="month" name="highSeasonStartMonth" placeholder="High season start month" value="<%=house.getHighSeasonStartMonth()%>">
 	         <input type="submit" class="btn btn-primary">
 	      </form>
 	    </div>
@@ -241,6 +215,64 @@ Iterable<House> houseList = (Iterable<House>)request.getAttribute("houses");
 	</div>
 	</td>
 <!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------ NEW RENT ANNOUNCEMENT ------------------------------------------------------------------------------------------>
+
+<td>
+<div class="modal" id="newRentAnnouncement<%=house.getId()%>">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <!-- Modal header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">NEW RENT ANNOUNCEMENT</h4>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	      <!-- Modal body -->
+	    <div class="modal-body">
+	      <form action="/house/<%=house.getId()%>/rentAnnouncement/insert" method="post">
+	        <input class="form-control" type="text" name="description" placeholder="Description">
+	       <input type="submit" class="btn btn-primary">
+	      </form>
+	    </div>
+	    <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+	    </div>	 
+	  </div>
+	  
+	</div>
+</td>
+<!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------ MANAGE RENT ANNOUNCEMENT ------------------------------------------------------------------------------------------>
+<%if(house.getAnnouncement()!=null){%>
+<td>
+  <div class="modal" id="manageRentAnnouncement<%=house.getId()%>">
+  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <!-- Modal header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">MANAGE RENT ANNOUNCEMENT</h4>
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	      </div>
+	      <!-- Modal body -->
+	    <div class="modal-body">
+	      <form action="/rentAnnouncement/update/<%=house.getAnnouncement().getId()%>" method="post">
+	         <input class="form-control" type="text" name="description" placeholder="Description" value="<%=house.getAnnouncement().getDescription()%>">
+	         <input type="submit" class="btn btn-primary" value="Edit">
+	      </form>
+	      <form action="/rentAnnouncement/delete/<%=house.getAnnouncement().getId()%>" method="post">
+	      <input type="submit" class="btn btn-danger" value="Delete announcement">
+	      </form>
+	    </div>
+	    <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+	    </div>	 
+	  </div>
+  </div>
+</td>
+<%} %>
 <%}  %>
  </tr>
 </table>

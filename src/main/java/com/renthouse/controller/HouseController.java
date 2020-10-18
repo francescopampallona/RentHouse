@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.renthouse.model.House;
+import com.renthouse.model.RentAnnouncement;
 import com.renthouse.service.HouseService;
+import com.renthouse.service.RentAnnouncementService;
 import com.renthouse.service.UserService;
 
 @Controller
@@ -24,6 +26,10 @@ public class HouseController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RentAnnouncementService rentAnnouncementService;
+
 	
 	@GetMapping
 	public String getAll(HttpServletRequest request) {
@@ -39,15 +45,12 @@ public class HouseController {
 			@RequestParam("civicNumber") int civicNumber,
 			@RequestParam("maxGuests") int maxGuests,
 			@RequestParam("lowSeasonPrice") float lowSeasonPrice,
-			@RequestParam("lowSeasonStartMonth") String lowSeasonStartMonth,
 			@RequestParam("mediumSeasonPrice") float mediumSeasonPrice,
-			@RequestParam("mediumSeasonStartMonth") String mediumSeasonStartMonth,
-			@RequestParam("highSeasonPrice") float highSeasonPrice,
-			@RequestParam("highSeasonStartMonth") String highSeasonStartMonth) {
+			@RequestParam("highSeasonPrice") float highSeasonPrice) {
 		
-		if(dataIsValid(request, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth)) {
+		if(dataIsValid(request, lowSeasonPrice, mediumSeasonPrice,highSeasonPrice)) {
 		request.setAttribute("successMessage", "House created successfully");
-		House house = new House(nation, city, address, civicNumber, maxGuests, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth, this.userService.getCurrentUser());
+		House house = new House(nation, city, address, civicNumber, maxGuests, lowSeasonPrice,  mediumSeasonPrice,  highSeasonPrice,  this.userService.getCurrentUser());
 		houseService.insert(house);
 		}
 		
@@ -64,22 +67,37 @@ public class HouseController {
 			@RequestParam("address") String address,
 			@RequestParam("civicNumber") int civicNumber,
 			@RequestParam("maxGuests") int maxGuests,
-			@RequestParam("lowSeasonPrice") float lowSeasonPrice,
-			@RequestParam("lowSeasonStartMonth") String lowSeasonStartMonth,
-			@RequestParam("mediumSeasonPrice") float mediumSeasonPrice,
-			@RequestParam("mediumSeasonStartMonth") String mediumSeasonStartMonth,
-			@RequestParam("highSeasonPrice") float highSeasonPrice,
-			@RequestParam("highSeasonStartMonth") String highSeasonStartMonth) {
+			@RequestParam("lowSeasonPrice") float lowSeasonPrice, 
+			@RequestParam("mediumSeasonPrice") float mediumSeasonPrice, 
+			@RequestParam("highSeasonPrice") float highSeasonPrice) {
 		
 		
-		if(dataIsValid(request, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth)) {
+		if(dataIsValid(request, lowSeasonPrice, mediumSeasonPrice,  highSeasonPrice)) {
 		request.setAttribute("successMessage", "House updated successfully");
-		House house = new House(nation, city, address, civicNumber, maxGuests, lowSeasonPrice, lowSeasonStartMonth, mediumSeasonPrice, mediumSeasonStartMonth, highSeasonPrice, highSeasonStartMonth,this.userService.getCurrentUser());
+		House house = new House(nation, city, address, civicNumber, maxGuests, lowSeasonPrice, mediumSeasonPrice,  highSeasonPrice, this.userService.getCurrentUser());
 		house.setId(id);
 		houseService.update(house);
 		}
 		
 		this.setHouses(request);
+		return "houseManagement";
+	}
+	
+	@PostMapping("/{house_id}/rentAnnouncement/insert")
+	public String insertRentAnnouncement(HttpServletRequest request,
+			@PathVariable("house_id") long house_id,
+			@RequestParam("description") String description
+			) 
+	{
+		House house = houseService.findById(house_id);
+		
+		RentAnnouncement rentAnnouncement = new RentAnnouncement(description, house);
+		
+		rentAnnouncementService.insert(rentAnnouncement);
+		this.setHouses(request);
+		
+		request.setAttribute("successMessage", "Rent announcement created successfully");
+		
 		return "houseManagement";
 	}
 	
@@ -91,7 +109,7 @@ public class HouseController {
 	}
 	
 	//Check validity of data inserted by user
-	private boolean dataIsValid(HttpServletRequest request, float lowSeasonPrice, String lowSeasonStartMonth, float mediumSeasonPrice, String mediumSeasonStartMonth, float highSeasonPrice, String highSeasonStartMonth) {
+	private boolean dataIsValid(HttpServletRequest request, float lowSeasonPrice,float mediumSeasonPrice, float highSeasonPrice) {
 		if((lowSeasonPrice>=mediumSeasonPrice) || (lowSeasonPrice>=highSeasonPrice) || (mediumSeasonPrice>=highSeasonPrice)) {
 			if(lowSeasonPrice>mediumSeasonPrice) {
 				request.setAttribute("errorMessage", "Low season price should be less than medium season price");
@@ -104,21 +122,12 @@ public class HouseController {
 			}
 			return false;
 		}
-		if((lowSeasonStartMonth.equals(mediumSeasonStartMonth)) || (lowSeasonStartMonth.equals(highSeasonStartMonth)) || (mediumSeasonStartMonth.equals(highSeasonStartMonth))) {
-			if(lowSeasonStartMonth.equals(mediumSeasonStartMonth)) {
-				request.setAttribute("errorMessage", "Low season start month should be different from medium season start month");
-			}
-			else if(lowSeasonStartMonth.equals(highSeasonStartMonth)) {
-				request.setAttribute("errorMessage", "Low season start month should be different from high season start month");
-			}
-			else {
-				request.setAttribute("errorMessage", "Medium season start month should be different from high season start month");
-			}
-			return false;
-		}
+		
 		
 		return true;
 	}
+	
+	
 	
 	
 
