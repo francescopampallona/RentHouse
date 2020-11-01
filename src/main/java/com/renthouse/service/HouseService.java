@@ -3,7 +3,6 @@ package com.renthouse.service;
 
 import com.querydsl.core.BooleanBuilder;
 import com.renthouse.dao.HouseRepository;
-import com.renthouse.exceptions.EmptyParamsException;
 import com.renthouse.model.House;
 
 import com.renthouse.model.QHouse;
@@ -19,7 +18,7 @@ public class HouseService extends AbstractService<House> {
 	@Autowired
 	private HouseRepository houseRepository;
 	
-	public Iterable<House> searchByParams(String nation, String city, Optional<Integer> maxNumberOfGuests) throws EmptyParamsException{
+	public Iterable<House> searchByParams(String nation, String city, Optional<Integer> maxNumberOfGuests) {
 	     BooleanBuilder where = new BooleanBuilder();
 	    
 	     if(!nation.trim().equals("")) {
