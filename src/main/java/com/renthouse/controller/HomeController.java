@@ -37,7 +37,10 @@ public class HomeController {
 	HouseService houseService;
 	
 	@GetMapping
-	public String announcements(HttpServletRequest request, @RequestParam Optional<String> nation, @RequestParam Optional<String> city) {
+	public String announcements(HttpServletRequest request, 
+			@RequestParam Optional<String> nation, 
+			@RequestParam Optional<String> city,
+			@RequestParam Optional<Integer> maxNumberOfGuests) {
 
 		
 		ArrayList<RentAnnouncement> announcements =new ArrayList<RentAnnouncement>();
@@ -45,7 +48,7 @@ public class HomeController {
 		if(nation.isPresent() && city.isPresent()) {
 			
 			try {
-				Iterable<House> houses= this.houseService.searchByParams(nation.get(), city.get());
+				Iterable<House> houses= this.houseService.searchByParams(nation.get(), city.get(), maxNumberOfGuests);
 				
 				for(House house: houses) {
 					

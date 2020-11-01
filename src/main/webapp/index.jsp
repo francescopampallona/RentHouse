@@ -18,6 +18,7 @@
 <form action="/"  style="margin: 10px">
 <input class="form-control" type="text" name="nation" placeholder="Search by nation" aria-label="Search">
 <input class="form-control" type="text" name="city" placeholder="Search by city" aria-label="Search">
+<input class="form-control" type="number" name="maxNumberOfGuests" placeholder="Search by max number of guests" aria-label="Search">
 <input type="submit" value="Search by nation and city">
 </form>
 <form>
