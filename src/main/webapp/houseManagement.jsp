@@ -293,6 +293,7 @@
 								<form
 									action="/rentAnnouncement/update/<%=house.getAnnouncement().getId()%>"
 									method="post">
+									<label for="description">Description</label>
 									<input class="form-control" type="text" name="description"
 										placeholder="Description"
 										value="<%=house.getAnnouncement().getDescription()%>">
