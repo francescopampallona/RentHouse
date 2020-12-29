@@ -22,17 +22,22 @@ import com.renthouse.model.House;
 import com.renthouse.model.RentAnnouncement;
 import com.renthouse.service.HouseService;
 import com.renthouse.service.RentAnnouncementService;
+import com.renthouse.service.ReservationService;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/")
 public class HomeController {
+	
 
 	@Autowired
 	RentAnnouncementService rentAnnouncementService;
 
 	@Autowired
 	HouseService houseService;
-
+	
+	@Autowired
+	ReservationService reservationService;
+	
 	@GetMapping
 	public String announcements(HttpServletRequest request, @RequestParam Optional<String> nation,
 			@RequestParam Optional<String> city, @RequestParam Optional<Integer> maxNumberOfGuests) {
@@ -60,14 +65,29 @@ public class HomeController {
 
 		return "index";
 	}
+	
+	@GetMapping("/announcement/{announcement_id}")
+    public String details(HttpServletRequest request, @PathVariable("announcement_id") long id) {
+		RentAnnouncement announcement = rentAnnouncementService.findById(id);
+		request.setAttribute("announcement", announcement);
+		return "rentAnnouncementDetails";
+	}
 
-	@PostMapping("/calculatePrice/{announcement_id}")
+	@PostMapping("/announcement/{announcement_id}")
 	public String calculatePrice(HttpServletRequest request, @PathVariable("announcement_id") long id,
 			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+		
 		try {
 			Date startRentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
 			Date endRentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
-
+			//-------------------------
+			//Check validity of data inserted
+			if(!checkValidity(startRentDate, endRentDate)) {
+				request.setAttribute("announcement", this.rentAnnouncementService.findById(id));
+				request.setAttribute("errorMessage", "Error: start date must be before or equal end date");
+				return "rentAnnouncementDetails";
+			}
+			//-------------------------
 			RentAnnouncement announcement = rentAnnouncementService.findById(id);
 			float price = rentAnnouncementService.calculatePrice(announcement, startRentDate, endRentDate);
 
@@ -77,13 +97,23 @@ public class HomeController {
 			request.setAttribute("totalPrice" + id, price);
 			request.setAttribute("totalDays" + id,
 					ChronoUnit.DAYS.between(startRentDate.toInstant(), endRentDate.toInstant()) + 1);
-
+			if(this.reservationService.selectedPeriodIsAlreadyBooked(announcement.getReferenceHouse().getId(), startRentDate, endRentDate)) {
+				request.setAttribute("WARNING", "Warning: the selected period goes in conflict with the period of another reservation");
+			}
 		} catch (ParseException exc) {
-			request.setAttribute("announcements", this.rentAnnouncementService.findAll());
+			request.setAttribute("announcement", this.rentAnnouncementService.findById(id));
 			request.setAttribute("errorMessage", exc);
-			return "index";
+			return "rentAnnouncementDetails";
 		}
 		return "rentAnnouncementDetails";
 	}
+	
+	private boolean checkValidity(Date startRentDate, Date endRentDate) {
+		if(startRentDate.after(endRentDate)) {
+			return false;
+		}
+		return true;
+	}
+	
 
 }
