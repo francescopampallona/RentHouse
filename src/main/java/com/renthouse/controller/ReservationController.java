@@ -95,7 +95,7 @@ public class ReservationController {
 
 			request.setAttribute("errorMessage", "Error: start date must be before or equal end date");
 		}
-		else if(this.reservationService.selectedPeriodIsAlreadyBooked(houseId, startReservation,endReservation)) {
+		else if(this.reservationService.selectedPeriodIsAlreadyBooked(id, houseId, startReservation,endReservation)) {
 			request.setAttribute("errorMessage", "Error: the selected period goes in conflict with the period of another reservation");
 		}
 		else {

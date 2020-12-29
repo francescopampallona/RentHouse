@@ -33,5 +33,20 @@ public class ReservationService extends AbstractService<Reservation> {
 		                                (res.getStartReservation().compareTo(selectedStartDate)==0 || res.getEndReservation().compareTo(selectedEndDate)==0));
 		return result;
 	}
+	
+	//In case of update, check that IDs are not the same 
+	public boolean selectedPeriodIsAlreadyBooked(long reservationId,long houseId, Date selectedStartDate, Date selectedEndDate){
+		
+		List<Reservation> reservations = (List<Reservation>)this.reservationRepository.getByReferenceHouse_Id(houseId);
+		boolean result = reservations.
+				          stream().
+				          anyMatch(res-> (res.getId()!=reservationId) && (
+		                                (res.getStartReservation().before(selectedEndDate) && res.getEndReservation().after(selectedEndDate)) ||
+		                                (res.getStartReservation().before(selectedStartDate) && res.getEndReservation().after(selectedStartDate)) ||
+		                                (res.getStartReservation().after(selectedStartDate) && res.getEndReservation().before(selectedEndDate)) ||
+		                                (res.getStartReservation().compareTo(selectedEndDate)==0)||(res.getEndReservation().compareTo(selectedStartDate)==0)||
+		                                (res.getStartReservation().compareTo(selectedStartDate)==0 || res.getEndReservation().compareTo(selectedEndDate)==0)));
+		return result;
+	}
 
 }
