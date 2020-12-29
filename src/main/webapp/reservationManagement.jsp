@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="com.renthouse.model.Reservation" import="java.util.List"%>
+    pageEncoding="UTF-8" import="com.renthouse.model.Reservation" import="com.renthouse.model.House" import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +14,7 @@
 <%
 List<Reservation> reservations = (List<Reservation>)request.getAttribute("reservations");
 long houseId = (Long)request.getAttribute("houseId");
+House house = (House)request.getAttribute("house");
 %>
 <!-----------------------MESSAGES --------------------------->
 	<%
@@ -28,6 +29,40 @@ long houseId = (Long)request.getAttribute("houseId");
 	<%
 		}
 	%>
+<div class="row" style="border: 2px solid black">
+	<div class="col-md-6">
+	  <h3>Reservation management for house:</h3>
+	  <h5>Nation: <%=house.getNation() %></h5>
+	  <h5>City: <%=house.getCity() %></h5>
+	  <h5>Address: <%=house.getAddress() %></h5>
+	  <h5>Civic number: <%=house.getCivicNumber() %></h5>
+	  <h5> Maximum number of guests: <%=house.getMaxGuests() %></h5>	
+	</div>
+	<div class="col-md-6">
+	  <h5>Check period availability</h5>
+	  <form action="/reservation/checkPeriodAvailability/<%=houseId%>" method="POST">
+	     <label for="startReservation">Start reservation date</label>
+	     <input class="form-control" type="date" name="startReservation">
+	  
+	     <label for="endReservation">End reservation date</label>
+	     <input class="form-control" type="date" name="endReservation">
+	     
+	     <input type="submit">
+	  </form>
+	  <%
+		if (request.getAttribute("CONFLICT") != null) {
+	%>
+	<div class="alert alert-danger" role="alert"><%=request.getAttribute("CONFLICT")%></div>
+	<%
+		} else if (request.getAttribute("AVAILABLE") != null) {
+	%>
+	<div class="alert alert-success" role="alert">
+		<%=request.getAttribute("AVAILABLE")%></div>
+	<%
+		}
+	%>
+	</div>
+</div>
 <div class="row">
   <div class="col-md-4">
     <form action="/reservation/insert/<%=houseId%>/" method="POST">

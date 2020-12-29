@@ -34,12 +34,10 @@ public class ReservationController {
 	@GetMapping("/{houseId}/")
 	public String getAll(HttpServletRequest request, @PathVariable("houseId") long houseId) {
 		
-	    this.setReservations(request, houseId);
-		request.setAttribute("houseId", houseId);
-		
-		
+	    this.setUpdates(request, houseId);
 		return "reservationManagement";
 	}
+	
 	
 	@PostMapping("/insert/{houseId}")
 	public String insert(
@@ -65,10 +63,10 @@ public class ReservationController {
 		request.setAttribute("successMessage", "Reservation created successfully");
 		}
 		
-		this.setReservations(request, houseId);
-		request.setAttribute("houseId", houseId);
+		this.setUpdates(request, houseId);
 		return "reservationManagement";
 	}
+	
 	
 	@PostMapping("/update/{id}")
 	public String update(
@@ -102,11 +100,11 @@ public class ReservationController {
 		this.reservationService.update(reservationToUpdate);
 		request.setAttribute("successMessage", "Reservation updated successfully");
 		}
-		this.setReservations(request, houseId);
-		request.setAttribute("houseId", houseId);
+		this.setUpdates(request, houseId);
 		return "reservationManagement";
 		
 	}
+	
 	
 	@GetMapping("/delete/{id}")
 	public String delete(HttpServletRequest request, @PathVariable("id") long id) {
@@ -114,16 +112,37 @@ public class ReservationController {
 		long houseId = reservationToDelete.getReferenceHouse().getId();
 		this.reservationService.delete(id);
 		request.setAttribute("successMessage", "Reservation deleted successfully");
-		this.setReservations(request, houseId);
-		request.setAttribute("houseId", houseId);
+		this.setUpdates(request, houseId);
+		return "reservationManagement";
+	}
+	
+	
+	@PostMapping("/checkPeriodAvailability/{houseId}")
+	public String checkPeriodAvailability(HttpServletRequest request, 
+			                              @PathVariable("houseId") long houseId,
+			                              @RequestParam("startReservation") Date startReservation,
+			                              @RequestParam("endReservation") Date endReservation) {
+	   if(!this.checkValidity(startReservation,endReservation)) {
+		   request.setAttribute("errorMessage", "Error: start date must be before or equal end date");
+		}
+	   else if(this.reservationService.selectedPeriodIsAlreadyBooked(houseId, startReservation, endReservation)) {
+			request.setAttribute("CONFLICT", "From " +startReservation+" to "+endReservation+" in conflict with the period of another reservation!");
+		}
+		else {
+			request.setAttribute("AVAILABLE", "From "+startReservation+" to "+endReservation+" is totally available!");
+		}
 		
+		this.setUpdates(request, houseId);
 		return "reservationManagement";
 	}
 
 	
-	private void setReservations(HttpServletRequest request, long houseId) {
+	private void setUpdates(HttpServletRequest request, long houseId) {
 		List<Reservation> reservations= this.reservationService.getByHouseId(houseId);
+		House house = this.houseService.findById(houseId);
 		request.setAttribute("reservations", reservations);
+		request.setAttribute("house", house);
+		request.setAttribute("houseId", houseId);
 	}
 	
 	private boolean checkValidity(Date startRentDate, Date endRentDate) {
