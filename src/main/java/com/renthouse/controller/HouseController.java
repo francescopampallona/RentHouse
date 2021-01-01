@@ -86,14 +86,20 @@ public class HouseController {
 	@PostMapping("/{house_id}/rentAnnouncement/insert")
 	public String insertRentAnnouncement(HttpServletRequest request,
 			@PathVariable("house_id") long house_id,
-			@RequestParam("description") String description
+			@RequestParam("description") String description,
+			@RequestParam("daysForDiscountValidity") int daysForDiscountValidity,
+			@RequestParam("discount") float discount
 			) 
 	{
 		House house = houseService.findById(house_id);
-		
-		RentAnnouncement rentAnnouncement = new RentAnnouncement(description, house);
+		if(daysForDiscountValidity<0 || discount>100 || discount<0) {
+			request.setAttribute("errorMessage", "Error: invalid data!!");
+		}
+		else {
+		RentAnnouncement rentAnnouncement = new RentAnnouncement(description, house, daysForDiscountValidity, discount/100);
 		
 		rentAnnouncementService.insert(rentAnnouncement);
+		}
 		this.setHouses(request);
 		
 		request.setAttribute("successMessage", "Rent announcement created successfully");

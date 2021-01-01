@@ -69,7 +69,11 @@
 					<%=announcement.getReferenceHouse().getHighSeasonPrice()%>
 					€ per day
 				</h3>
-				<h3>Discount of 10 % for rents over 3 days</h3>
+				<%if(announcement.getDaysForDiscountValidity()>0){ %>
+				<h3>Discount of <%=announcement.getDiscount()*100 %> % for rents over <%=announcement.getDaysForDiscountValidity()%> days</h3>
+				<%} else{%>
+				<h3>Discount of <%=announcement.getDiscount()*100 %> % </h3>
+				<%} %>
 			</div>
 		</div>
 		<div class="row">

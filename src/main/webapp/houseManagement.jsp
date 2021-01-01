@@ -257,11 +257,18 @@
 							</div>
 							<!-- Modal body -->
 							<div class="modal-body">
-								<form action="/house/<%=house.getId()%>/rentAnnouncement/insert"
-									method="post">
-									<input class="form-control" type="text" name="description"
-										placeholder="Description"> <input type="submit"
-										class="btn btn-primary">
+								<form action="/house/<%=house.getId()%>/rentAnnouncement/insert" method="post">
+								<label for="description">Description</label>
+								<input class="form-control" type="text" name="description" placeholder="Description"> 
+								
+								<label>Days over which the discount is valid</label>
+								<input class="form-control" type="number" name="daysForDiscountValidity" value="3">
+								
+								<label for="discount">Discount %</label>
+								
+								<input class="form-control" type="number"  name="discount" value="1">
+									
+								<input type="submit" class="btn btn-primary">
 								</form>
 							</div>
 							<!-- Modal footer -->
@@ -297,6 +304,14 @@
 									<input class="form-control" type="text" name="description"
 										placeholder="Description"
 										value="<%=house.getAnnouncement().getDescription()%>">
+										
+										
+								<label>Days over which the discount is valid</label>
+								<input class="form-control" type="number" name="daysForDiscountValidity" value="<%=house.getAnnouncement().getDaysForDiscountValidity()%>">
+								
+								<label for="discount">Discount %</label>
+								
+								<input class="form-control" type="number"  name="discount" value="<%=house.getAnnouncement().getDiscount()*100%>">
 									<input type="submit" class="btn btn-primary" value="Edit">
 								</form>
 								<form

@@ -26,17 +26,26 @@ public class RentAnnouncementController {
 	@PostMapping("/update/{id}")
 	public String update(HttpServletRequest request,
 			@RequestParam("description") String description,
-			@PathVariable("id") long id) 
+			@PathVariable("id") long id,
+	        @RequestParam("daysForDiscountValidity") int daysForDiscountValidity,
+	        @RequestParam("discount") float discount)
 	{
+		
+		if(daysForDiscountValidity<0 || discount>100 || discount<0) {
+			request.setAttribute("errorMessage", "Error: invalid data!!");
+		}
+		else {
 		RentAnnouncement rentAnnouncementToUpdate = rentAnnouncementService.findById(id);
 		
 		rentAnnouncementToUpdate.setDescription(description);
+		rentAnnouncementToUpdate.setDaysForDiscountValidity(daysForDiscountValidity);
+		rentAnnouncementToUpdate.setDiscount(discount/100);
 		rentAnnouncementService.update(rentAnnouncementToUpdate);
-		
+		request.setAttribute("successMessage", "Rent announcement updated successfully");
+		}
 		this.setHouses(request);
 		
 		
-		request.setAttribute("successMessage", "Rent announcement updated successfully");
 		
 		return "houseManagement";
 	}

@@ -60,7 +60,7 @@ public class RentAnnouncementService extends AbstractService<RentAnnouncement>{
         	if((month>=1 && month<4)  || (month>8)) {
         		numberOfDaysForEachSeason[0] = numberOfDaysForEachSeason[0] +numberOfDaysForEachMonth[i];
         	}
-        	else if((month>=4 && month<7)) {
+        	else if((month>=4 && month<=7)) {
         		numberOfDaysForEachSeason[1] = numberOfDaysForEachSeason[1] +numberOfDaysForEachMonth[i];
         	}
         	else {
@@ -83,8 +83,8 @@ public class RentAnnouncementService extends AbstractService<RentAnnouncement>{
 		float price = (rentAnnouncement.getReferenceHouse().getLowSeasonPrice()*numberOfDaysForEachSeason[0]) +
 				(rentAnnouncement.getReferenceHouse().getMediumSeasonPrice()*numberOfDaysForEachSeason[1])+
 				(rentAnnouncement.getReferenceHouse().getHighSeasonPrice()*numberOfDaysForEachSeason[2]);
-		if(totalDays>3) {
-			price = (float) (price-(price*0.1));
+		if(totalDays>rentAnnouncement.getDaysForDiscountValidity()) {
+			price = (float) (price-(price*rentAnnouncement.getDiscount()));
 		}
 		
 		

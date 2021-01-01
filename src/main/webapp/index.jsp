@@ -73,7 +73,11 @@
 						<%=announcement.getReferenceHouse().getHighSeasonPrice()%>
 						€ per day
 					</h5>
-					<h5>Discount of 10 % for rents over 3 days</h5>
+					<%if(announcement.getDaysForDiscountValidity()>0){ %>
+				    <h3>Discount of <%=announcement.getDiscount()*100 %> % for rents over <%=announcement.getDaysForDiscountValidity()%> days</h3>
+				    <%} else{%>
+				    <h3>Discount of <%=announcement.getDiscount()*100 %> % </h3>
+				    <%} %>
 				</div>
 			</div>
 			<div class="row">
@@ -90,35 +94,7 @@
 					</form>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<%
-						String totalPriceKey = "totalPrice" + announcement.getId();
-					String totalDaysKey = "totalDays" + announcement.getId();
-					if (request.getAttribute(totalPriceKey) != null && request.getAttribute(totalDaysKey) != null
-							&& request.getAttribute("startDate") != null && request.getAttribute("endDate") != null) {
-						float totalPrice = (float) request.getAttribute(totalPriceKey);
-						long totalDays = (long) request.getAttribute(totalDaysKey);
-						String startDate = (String) request.getAttribute("startDate");
-						String endDate = (String) request.getAttribute("endDate");
-					%>
-					<p>
-						From
-						<%=startDate%>
-						to
-						<%=endDate%>
-						the total price calculated is
-						<%=totalPrice%>
-						€ for a total of
-						<%=totalDays%>
-						days
-					</p>
-
-					<%
-						}
-					%>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 	<%

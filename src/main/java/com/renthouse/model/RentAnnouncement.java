@@ -23,12 +23,20 @@ public class RentAnnouncement {
 	@Column
 	private String description;
 	
+	@Column(nullable=false)
+	private int daysForDiscountValidity;
+
+	@Column(nullable=false)
+	private float discount;
+	
 	@OneToOne
 	private House referenceHouse;
 	
-	public RentAnnouncement(String description, House referenceHouse) {
+	public RentAnnouncement(String description, House referenceHouse, int daysForDiscountValidity, float discount) {
 		this.description = description;
 		this.referenceHouse = referenceHouse;
+		this.daysForDiscountValidity = daysForDiscountValidity;
+		this.discount = discount;
 	}
 	
 	public RentAnnouncement() {}
@@ -61,6 +69,22 @@ public class RentAnnouncement {
 
 	public void setReferenceHouse(House referenceHouse) {
 		this.referenceHouse = referenceHouse;
+	}
+	
+	public int getDaysForDiscountValidity() {
+		return daysForDiscountValidity;
+	}
+
+	public void setDaysForDiscountValidity(int daysForDiscountValidity) {
+		this.daysForDiscountValidity = daysForDiscountValidity;
+	}
+
+	public float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(float discount) {
+		this.discount = discount;
 	}
 
 	
