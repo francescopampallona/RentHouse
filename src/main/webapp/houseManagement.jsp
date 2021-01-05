@@ -28,6 +28,18 @@
 	<%
 		}
 	%>
+	<!-- --------------------------------------------------------------------------SEARCH HOUSE ---------------------------------------------------------------------------------->
+	<form action="/house/search" style="margin: 10px">
+	  <fieldset>
+	   <legend>Search house</legend>
+		<input class="form-control" type="text" name="nation" placeholder="Search by nation" aria-label="Search"> 
+		<input class="form-control" type="text" name="city" placeholder="Search by city" aria-label="Search"> 
+		<input class="form-control" type="number" name="maxNumberOfGuests" placeholder="Search by max number of guests" aria-label="Search">
+		<input class="form-control" type="text" name="address" placeholder="Address" aria-label="Search">
+		<input class="form-control" type="number" name="civicNumber" placeholder="Civic number" aria-label="Search">
+		<input type="submit" value="Search by nation and city">
+	  </fieldset>
+	</form>
 	<!---------------------------------------------------------------------------- HOUSE REGISTRATION ---------------------------------------------------------------------------->
 	<button class="btn btn-primary" data-toggle="modal"
 		data-target="#newHouse">REGISTER A NEW HOUSE</button>
@@ -154,7 +166,7 @@
 								</div>
 								<div class="row">
 									<div class="col-md-6">Max number of guests:</div>
-									<div class="col-md-6"><%=house.getCivicNumber()%></div>
+									<div class="col-md-6"><%=house.getMaxGuests()%></div>
 								</div>
 								<div class="row">
 									<div class="col-md-6">Low season daily price:</div>

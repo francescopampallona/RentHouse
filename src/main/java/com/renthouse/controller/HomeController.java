@@ -39,25 +39,33 @@ public class HomeController {
 	ReservationService reservationService;
 	
 	@GetMapping
+	public String getAll(HttpServletRequest request) {
+		ArrayList<RentAnnouncement> announcements = new ArrayList<RentAnnouncement>();
+		announcements= (ArrayList<RentAnnouncement>)rentAnnouncementService.findAll();
+		int numberOfElements = announcements.size();
+		request.setAttribute("announcements", announcements);
+		request.setAttribute("numberOfElements", numberOfElements);
+		return "index";
+	}
+	
+	@GetMapping("/search")
 	public String announcements(HttpServletRequest request, @RequestParam Optional<String> nation,
-			@RequestParam Optional<String> city, @RequestParam Optional<Integer> maxNumberOfGuests) {
+			@RequestParam Optional<String> city, @RequestParam Optional<Integer> maxNumberOfGuests, @RequestParam Optional<String> address, @RequestParam Optional<Integer> civicNumber) {
 
 		ArrayList<RentAnnouncement> announcements = new ArrayList<RentAnnouncement>();
 
-		if (nation.isPresent() && city.isPresent()) {
+	 
 
-			Iterable<House> houses = this.houseService.searchByParams(nation.get(), city.get(), maxNumberOfGuests);
+		Iterable<House> houses = this.houseService.searchByParams(nation.get(), city.get(), maxNumberOfGuests, address.get(), civicNumber);
 
-			for (House house : houses) {
+		for (House house : houses) {
 
-				if (house.getAnnouncement() != null) {
-					announcements.add(house.getAnnouncement());
-				}
-			}
-
-		} else {
-			announcements = (ArrayList<RentAnnouncement>) this.rentAnnouncementService.findAll();
+		  if (house.getAnnouncement() != null) {
+			 announcements.add(house.getAnnouncement());
+		   }
 		}
+
+	 
 
 		int numberOfElements = announcements.size();
 		request.setAttribute("announcements", announcements);

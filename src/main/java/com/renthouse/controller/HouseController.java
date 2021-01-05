@@ -1,6 +1,8 @@
 package com.renthouse.controller;
 
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,15 @@ public class HouseController {
 	@GetMapping
 	public String getAll(HttpServletRequest request) {
 		this.setHouses(request);
+		return "houseManagement";
+	}
+	
+	@GetMapping("/search")
+	public String searchHouse(HttpServletRequest request, @RequestParam Optional<String> nation,
+			@RequestParam Optional<String> city, @RequestParam Optional<Integer> maxNumberOfGuests, @RequestParam Optional<String> address, @RequestParam Optional<Integer> civicNumber) {
+		
+		Iterable<House> houses = this.houseService.searchByParams(nation.get(), city.get(), maxNumberOfGuests, address.get(), civicNumber);
+		request.setAttribute("houses", houses);
 		return "houseManagement";
 	}
 	
