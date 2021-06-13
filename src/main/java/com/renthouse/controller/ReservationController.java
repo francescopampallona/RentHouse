@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.renthouse.model.House;
 import com.renthouse.model.Reservation;
+import com.renthouse.model.Host;
+import com.renthouse.service.HostService;
 import com.renthouse.service.HouseService;
+import com.renthouse.service.RentAnnouncementService;
 import com.renthouse.service.ReservationService;
 
 import java.sql.Date;
@@ -27,7 +30,13 @@ public class ReservationController {
 	private HouseService houseService;
 	
 	@Autowired
+	private HostService hostService;
+	
+	@Autowired
 	private ReservationService reservationService;
+	
+	@Autowired
+	private RentAnnouncementService rentAnnouncementService;
 	
 	
 	
@@ -45,11 +54,7 @@ public class ReservationController {
 			@PathVariable("houseId") long houseId,
 			@RequestParam("startReservation") Date startReservation,
 			@RequestParam("endReservation") Date endReservation,
-			@RequestParam("potentialHostName") String potentialHostName,
-			@RequestParam("potentialHostSurname") String potentialHostSurname,
-			@RequestParam("potentialHostEmail") String potentialHostEmail,
-			@RequestParam("potentialHostTelephoneNumber") String potentialHostTelephoneNumber,
-			@RequestParam("potentialHostCreditCardNumber") String potentialHostCreditCardNumber
+			@RequestParam("hostId") long hostId
 			) {
 		if(!this.checkValidity(startReservation, endReservation )) {
 
@@ -59,7 +64,9 @@ public class ReservationController {
 			request.setAttribute("errorMessage", "Error: the selected period goes in conflict with the period of another reservation");
 		}
 		else {
-		this.reservationService.insert(new Reservation(startReservation, endReservation,(House)this.houseService.findById(houseId), potentialHostName, potentialHostSurname, potentialHostEmail, potentialHostTelephoneNumber, potentialHostCreditCardNumber));
+	    House house = this.houseService.findById(houseId);
+		float price = this.rentAnnouncementService.calculatePrice(house.getAnnouncement(),new java.util.Date(startReservation.getTime()),new java.util.Date(endReservation.getTime()));
+		this.reservationService.insert(new Reservation(startReservation, endReservation, price,house, (Host)this.hostService.findById(hostId) ));
 		request.setAttribute("successMessage", "Reservation created successfully");
 		}
 		
@@ -73,21 +80,11 @@ public class ReservationController {
 			HttpServletRequest request,
 			@PathVariable("id") long id,
 			@RequestParam("startReservation") Date startReservation,
-			@RequestParam("endReservation") Date endReservation,
-			@RequestParam("potentialHostName") String potentialHostName,
-			@RequestParam("potentialHostSurname") String potentialHostSurname,
-			@RequestParam("potentialHostEmail") String potentialHostEmail,
-			@RequestParam("potentialHostTelephoneNumber") String potentialHostTelephoneNumber,
-			@RequestParam("potentialHostCreditCardNumber") String potentialHostCreditCardNumber
+			@RequestParam("endReservation") Date endReservation
 			) {
 		Reservation reservationToUpdate = this.reservationService.findById(id);
 		reservationToUpdate.setStartReservation(startReservation);
 		reservationToUpdate.setEndReservation(endReservation);
-		reservationToUpdate.setPotentialHostName(potentialHostName);
-		reservationToUpdate.setPotentialHostSurname(potentialHostSurname);
-		reservationToUpdate.setPotentialHostEmail(potentialHostEmail);
-		reservationToUpdate.setPotentialHostTelephoneNumber(potentialHostTelephoneNumber);
-		reservationToUpdate.setPotentialHostCreditCardNumber(potentialHostCreditCardNumber);
 		long houseId = reservationToUpdate.getReferenceHouse().getId();
 		if(!this.checkValidity(startReservation, endReservation )) {
 
@@ -97,6 +94,9 @@ public class ReservationController {
 			request.setAttribute("errorMessage", "Error: the selected period goes in conflict with the period of another reservation");
 		}
 		else {
+		House house = this.houseService.findById(houseId);
+		float price = this.rentAnnouncementService.calculatePrice(house.getAnnouncement(),new java.util.Date(startReservation.getTime()),new java.util.Date(endReservation.getTime()));
+		reservationToUpdate.setPrice(price);	
 		this.reservationService.update(reservationToUpdate);
 		request.setAttribute("successMessage", "Reservation updated successfully");
 		}
@@ -139,8 +139,10 @@ public class ReservationController {
 	
 	private void setUpdates(HttpServletRequest request, long houseId) {
 		List<Reservation> reservations= this.reservationService.getByHouseId(houseId);
+		List<Host> hosts = (List<Host>)this.hostService.findAll();
 		House house = this.houseService.findById(houseId);
 		request.setAttribute("reservations", reservations);
+		request.setAttribute("hosts", hosts);
 		request.setAttribute("house", house);
 		request.setAttribute("houseId", houseId);
 	}

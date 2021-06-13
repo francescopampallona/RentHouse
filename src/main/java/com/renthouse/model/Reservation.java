@@ -24,26 +24,14 @@ public class Reservation {
 	@Column
 	private Date endReservation;
 	
-	@Column 
-	private String potentialHostName;
-	
-	@Column 
-	private String potentialHostSurname;
-	
 	@Column
-	private String potentialHostEmail;
-	
-	@Column
-	private String potentialHostTelephoneNumber;
-	
-	@Column
-	private String potentialHostCreditCardNumber;
+	private float price;
 	
 	@ManyToOne
 	private House referenceHouse;
 	
-	 
-	
+	@ManyToOne
+	private Host referenceHost;
 	
 	//DEFAULT CONSTRUCTOR
 	public Reservation() {}
@@ -52,65 +40,16 @@ public class Reservation {
 	public Reservation(
 			Date startReservation, 
 			Date endReservation, 
-			House referenceHouse, 
-			String potentialHostName,
-			String potentialHostSurname,
-			String potentialHostEmail,
-			String potentialHostTelephoneNumber,
-			String potentialHostCreditCardNumber) {
+			float price,
+			House referenceHouse,
+			Host host) {
 		this.startReservation = startReservation;
 		this.endReservation = endReservation;
+		this.price = price;
 		this.referenceHouse = referenceHouse;
-		this.potentialHostName = potentialHostName;
-		this.potentialHostSurname = potentialHostSurname;
-		this.potentialHostEmail = potentialHostEmail;
-		this.potentialHostTelephoneNumber = potentialHostTelephoneNumber;
-		this.potentialHostCreditCardNumber = potentialHostCreditCardNumber;
-		
+		this.referenceHost = host;
 	}
 	
-	public String getPotentialHostName() {
-		return potentialHostName;
-	}
-
-	public void setPotentialHostName(String potentialHostName) {
-		this.potentialHostName = potentialHostName;
-	}
-
-	public String getPotentialHostSurname() {
-		return potentialHostSurname;
-	}
-
-	public void setPotentialHostSurname(String potentialHostSurname) {
-		this.potentialHostSurname = potentialHostSurname;
-	}
-
-	public String getPotentialHostEmail() {
-		return potentialHostEmail;
-	}
-
-	public void setPotentialHostEmail(String potentialHostEmail) {
-		this.potentialHostEmail = potentialHostEmail;
-	}
-
-	public String getPotentialHostTelephoneNumber() {
-		return potentialHostTelephoneNumber;
-	}
-
-	public void setPotentialHostTelephoneNumber(String potentialHostTelephoneNumber) {
-		this.potentialHostTelephoneNumber = potentialHostTelephoneNumber;
-	}
-
-	public String getPotentialHostCreditCardNumber() {
-		return potentialHostCreditCardNumber;
-	}
-
-	public void setPotentialHostCreditCardNumber(String potentialHostCreditCardNumber) {
-		this.potentialHostCreditCardNumber = potentialHostCreditCardNumber;
-	}
-
-
-
 	public House getReferenceHouse() {
 		return referenceHouse;
 	}
@@ -118,7 +57,14 @@ public class Reservation {
 	public void setReferenceHouse(House referenceHouse) {
 		this.referenceHouse = referenceHouse;
 	}
+	
+	public Host getReferenceHost() {
+		return referenceHost;
+	}
 
+	public void setReferenceHost(Host referenceHost) {
+		this.referenceHost = referenceHost;
+	}
 
 	public long getId() {
 		return id;
@@ -142,6 +88,14 @@ public class Reservation {
 
 	public void setEndReservation(Date endReservation) {
 		this.endReservation = endReservation;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
 	}
 	
 	

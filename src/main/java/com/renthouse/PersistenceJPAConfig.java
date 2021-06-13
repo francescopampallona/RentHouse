@@ -34,7 +34,7 @@ public class PersistenceJPAConfig {
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUsername(username);
 		dataSource.setPassword(password);
-		dataSource.setUrl("jdbc:"+url);
+		dataSource.setUrl("jdbc:" + url);
 
 		return dataSource;
 
@@ -64,18 +64,18 @@ public class PersistenceJPAConfig {
 		return em;
 
 	}
-	
+
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-	    JpaTransactionManager transactionManager = new JpaTransactionManager();
-	    transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-	 
-	    return transactionManager;
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+
+		return transactionManager;
 	}
-	 
+
 	@Bean
-	public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
-	    return new PersistenceExceptionTranslationPostProcessor();
+	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+		return new PersistenceExceptionTranslationPostProcessor();
 	}
 
 }

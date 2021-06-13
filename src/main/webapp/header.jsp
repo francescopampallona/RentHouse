@@ -9,6 +9,7 @@
       <li class="nav-item">
         <a href="/user/home/">HOME</a>
         <a href="/house/">HOUSE MANAGEMENT</a>
+        <a href="/host/">HOST MANAGEMENT</a>
       </li>
     </ul>
   </div>

@@ -120,12 +120,12 @@
 				if (house.getAnnouncement() == null) {
 			%>
 			<td><button class="btn btn-primary" data-toggle="modal"
-					data-target="#newRentAnnouncement<%=house.getId()%>">NEW
+					data-target="#newRentAnnouncement<%=house.getId()%>">CREATE NEW
 					RENT ANNOUNCEMENT</button></td>
 			<%
 				} else {
 			%>
-			<td><button class="btn btn-primary" data-toggle="modal"
+			<td><button data-toggle="modal"
 					data-target="#manageRentAnnouncement<%=house.getId()%>">MANAGE
 					RENT ANNOUNCEMENT</button></td>
 			<%
@@ -278,7 +278,7 @@
 								
 								<label for="discount">Discount %</label>
 								
-								<input class="form-control" type="number"  name="discount" value="1">
+								<input class="form-control" type="number"  name="discount" value="10.0">
 									
 								<input type="submit" class="btn btn-primary">
 								</form>

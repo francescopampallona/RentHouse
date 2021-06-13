@@ -7,7 +7,7 @@
 <title>Register</title>
 </head>
 <body>
-	<form method="POST" action="/users/register">
+	<form method="POST" action="/user/register">
 		<input type="text" name="username" placeholder="username"> 
 		<input type="text" name="telephone" placeholder="telephone"> 
 		<input type="email" name="email" placeholder="email">

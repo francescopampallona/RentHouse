@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="com.renthouse.model.Reservation" import="com.renthouse.model.House" import="java.util.List"%>
+    pageEncoding="UTF-8" import="com.renthouse.model.Reservation" import="com.renthouse.model.House" import="com.renthouse.model.Host" import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,8 +13,10 @@
 <jsp:include page="header.jsp"></jsp:include>
 <%
 List<Reservation> reservations = (List<Reservation>)request.getAttribute("reservations");
+List<Host> hosts = (List<Host>)request.getAttribute("hosts");
 long houseId = (Long)request.getAttribute("houseId");
 House house = (House)request.getAttribute("house");
+Host host = (Host)request.getAttribute("host");
 %>
 <!-----------------------MESSAGES --------------------------->
 	<%
@@ -74,20 +76,15 @@ House house = (House)request.getAttribute("house");
 	  <label for="endReservation">End reservation date</label>
 	  <input class="form-control" type="date" name="endReservation">
 	  
-	  <label for="potentialHostName">Potential host name</label>
-	  <input class="form-control" type="text" name="potentialHostName">
+	  <label for="hostId">Choose host</label>
+	  <select name="hostId">
+	  <%for(Host h: hosts){ %>
+	    <option value="<%=h.getId()%>">
+	       <%=h.getEmail() %>
+	    </option>
+	  <%} %>
+	  </select>
 	  
-	  <label for="potentialHostSurname">Potential host surname</label>
-	  <input class="form-control" type="text" name="potentialHostSurname">
-	  
-	  <label for="potentialHostEmail">Potential host email</label>
-	  <input class="form-control" type="text" name="potentialHostEmail">
-	  
-	  <label for="potentialHostTelephoneNumber">Potential host telephone number</label>
-	  <input class="form-control" type="text" name="potentialHostTelephoneNumber">
-	  
-	  <label for="potentialHostCreditCardNumber">Potential host credit card number</label>
-      <input class="form-control" type="text" name="potentialHostCreditCardNumber">
       
 	  <input type="submit">
 	  </fieldset>
@@ -108,7 +105,7 @@ House house = (House)request.getAttribute("house");
   <tr>
     <td><%=reservation.getStartReservation()%></td>
     <td><%=reservation.getEndReservation()%></td>
-    <td><%=reservation.getPotentialHostEmail() %></td>
+    <td><%=reservation.getReferenceHost().getEmail()%></td>
     <td><button class="btn btn-primary" data-toggle="modal" data-target="#reservationDetails<%=reservation.getId()%>">DETAILS</button></td>
     <td><button class="btn btn-primary" data-toggle="modal" data-target="#updateReservation<%=reservation.getId()%>">UPDATE</button></td>
     <td><button class="btn btn-danger" data-toggle="modal" data-target="#removeReservation<%=reservation.getId()%>">REMOVE</button></td>
@@ -133,30 +130,33 @@ House house = (House)request.getAttribute("house");
 		    <div class="col-md-8">End reservation:</div>
 		    <div class="col-md-4"><%=reservation.getEndReservation()%></div>
 		  </div>
-		  
 		  <div class="row">
-		    <div class="col-md-8">Potential host name:</div>
-		    <div class="col-md-4"><%=reservation.getPotentialHostName()%></div>
+		  	    <div class="col-md-8">Price:</div>
+		    <div class="col-md-4"><%=reservation.getPrice()%></div>
+		  </div>
+		  <div class="row">
+		    <div class="col-md-8">Host name:</div>
+		    <div class="col-md-4"><%=reservation.getReferenceHost().getName()%></div>
 		  </div>
 		  
 		  <div class="row">
-		    <div class="col-md-8">Potential host surname:</div>
-		    <div class="col-md-4"><%=reservation.getPotentialHostSurname()%></div>
+		    <div class="col-md-8">Host surname:</div>
+		    <div class="col-md-4"><%=reservation.getReferenceHost().getSurname()%></div>
 		  </div>
 		  
 		  <div class="row">
-		    <div class="col-md-8">Potential host email:</div>
-		    <div class="col-md-4"><%=reservation.getPotentialHostEmail() %></div>
+		    <div class="col-md-8">Host email:</div>
+		    <div class="col-md-4"><%=reservation.getReferenceHost().getEmail() %></div>
 		  </div>
 		  
 		  <div class="row">
-		    <div class="col-md-8">Potential host telephone number:</div>
-		    <div class="col-md-4"><%=reservation.getPotentialHostTelephoneNumber()%></div>
+		    <div class="col-md-8">Host telephone number:</div>
+		    <div class="col-md-4"><%=reservation.getReferenceHost().getTelephoneNumber()%></div>
 		  </div>
 		  
 		  <div class="row">
-		    <div class="col-md-8">Potential host credit card number:</div>
-		    <div class="col-md-4"><%=reservation.getPotentialHostCreditCardNumber() %></div>
+		    <div class="col-md-8">Host credit card number:</div>
+		    <div class="col-md-4"><%=reservation.getReferenceHost().getCreditCardNumber() %></div>
 		  </div>
 		 </div>
 		  <!-- Modal footer -->
@@ -188,21 +188,6 @@ House house = (House)request.getAttribute("house");
 	          <label for="endReservation">End reservation date</label>
 	          <input class="form-control" type="date" name="endReservation" value="<%=reservation.getEndReservation()%>">
 	  
-	          <label for="potentialHostName">Potential host name</label>
-	          <input class="form-control" type="text" name="potentialHostName" value="<%=reservation.getPotentialHostName()%>">
-	  
-         	  <label for="potentialHostSurname">Potential host surname</label>
-        	  <input class="form-control" type="text" name="potentialHostSurname" value="<%=reservation.getPotentialHostSurname()%>">
-	  
-        	  <label for="potentialHostEmail">Potential host email</label>
-        	  <input class="form-control" type="text" name="potentialHostEmail" value="<%=reservation.getPotentialHostEmail() %>">
-	  
-        	  <label for="potentialHostTelephoneNumber">Potential host telephone number</label>
-	          <input class="form-control" type="text" name="potentialHostTelephoneNumber" value="<%=reservation.getPotentialHostTelephoneNumber()%>">
-	  
-	          <label for="potentialHostCreditCardNumber">Potential host credit card number</label>
-              <input class="form-control" type="text" name="potentialHostCreditCardNumber" value="<%=reservation.getPotentialHostCreditCardNumber()%>">
-      
          	  <input type="submit">
          	  </fieldset>
 		    </form> 
