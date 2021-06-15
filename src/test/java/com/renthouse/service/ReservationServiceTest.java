@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import com.renthouse.dao.ReservationRepository;
+import com.renthouse.model.Host;
 import com.renthouse.model.House;
 import com.renthouse.model.Reservation;
 
@@ -96,12 +97,10 @@ public class ReservationServiceTest {
 		
 		reservations.add(new Reservation( new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse("2020-09-28").getTime()),
 			                              new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse("2020-10-10").getTime()),
-				                         new House(),
-				                         "aaa",
-				                         "aaa",
-				                         "aaa@aaa",
-				                         "333",
-				                         "aaa"));
+				                         0,
+			                              new House(),
+				                        new Host()
+				                         ));
 		
 		return reservations;
 		
